@@ -20,6 +20,7 @@ class CreateArticlesTable extends Migration
             $table->string('size');
             $table->string('description');
             $table->float('price');
+            $table->text('image');
             $table->timestamps();
         });
     }

@@ -12,3 +12,5 @@
 */
 
 Route::get('/', 'MainController@home');
+
+Route::get('articles', 'ArticleController@index');
