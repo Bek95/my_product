@@ -15,9 +15,24 @@ class CreateArticleCategoryTable extends Migration
     {
         Schema::create('article_category', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('article_id');
-            $table->unsignedBigInteger('category_id');
-            $table->timestamps();
+            $table->integer('article_id')
+                ->unsigned()
+                ->index();
+            $table->foreign('article_id')
+                ->references('id')
+                ->on('articles')
+                ->onDelete('cascade');
+
+
+            $table->integer('category_id')
+                ->unsigned()
+                ->index();
+            $table->foreign('category_id')
+                ->references('id')
+                ->on('categories')
+                ->onDelete('cascade');
+
+            $table->primary(['article_id', 'category_id']);
         });
     }
 
