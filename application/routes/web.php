@@ -13,4 +13,7 @@
 
 Route::get('/', 'MainController@home');
 
-Route::get('articles', 'ArticleController@index');
+Route::get('articles/overview', 'ArticleController@index')->name('articles.index');
+Route::get('articles/new', 'ArticleController@create')->name('articles.create');
+Route::post('articles/store', 'ArticleController@store')->name('articles.store');
+

@@ -31,7 +31,7 @@
                 <div class="col-sm-4 offset-md-1 py-4">
                     <ul class="list-unstyled">
                         <li><a href="{{ url('/') }}" class="text-white">Accueil</a></li>
-                        <li><a href="{{ url('/articles') }}" class="text-white">Articles</a></li>
+                        <li><a href="{{ route('articles.index') }}" class="text-white">Articles</a></li>
                         <li><a href="#" class="text-white">Catégories</a></li>
                     </ul>
                 </div>

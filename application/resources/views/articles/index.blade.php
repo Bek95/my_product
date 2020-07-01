@@ -7,7 +7,7 @@
                 <h1 class="jumbotron-heading">Les Chemises</h1>
                 <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita, ubi nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum ac lasciviam.</p>
                 <p>
-                    {{--                <a href="#" class="btn btn-primary my-2">Main call to action</a>--}}
+                                    <a href="{{ route('articles.create') }}" class="btn btn-primary my-2">Ajouter une nouvelle chemise</a>
                     {{--                <a href="#" class="btn btn-secondary my-2">Secondary action</a>--}}
                 </p>
             </div>
@@ -22,7 +22,7 @@
                         @foreach($articles as $article)
                             <div class="col-md-4">
                                 <div class="card mb-4 box-shadow">
-                                    <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
+                                    <img class="card-img-top" src="/storage/articles/{{ $article->image }}" alt="Card image cap">
                                     <div class="card-body">
                                         <h3>{{ $article->name }}</h3>
                                         <h4>Couleur : {{ $article->color }}</h4>
