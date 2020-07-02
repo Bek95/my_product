@@ -29,6 +29,7 @@ class ArticleController extends Controller
     {
         $categories = Category::all();
 
+
         return view('articles.create', compact('categories'));
     }
 

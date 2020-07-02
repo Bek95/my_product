@@ -15,15 +15,18 @@
 
         <div class="album py-5 bg-light">
             <div class="container">
-
-                <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
+                <!-- Ici je gère au cas où, le select est vide, pas de produits et pas de catégories-->
+            {{--                @if(isset($categories) && !empty($categories))--}}
+            {{--                    <a href="{{ route('categories.create') }}">Créer une nouvelle catégorie</a>--}}
+            {{--                @else--}}
+            <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
                 afin de gérer des fichiers-->
                 <form method="post" action="{{ route('articles.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Nom</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
+                            <input type="text" class="form-control" id="name" name="name">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="color">Couleur</label>
@@ -45,28 +48,31 @@
                             <input type="number" class="form-control" id="price" name="price">
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="category">Categories</label>
-                            <select id="category" class="form-control" name="category">
-                                <option selected>Choose...</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="category">Categories</label>
+                                <select id="category" class="form-control" name="category">
+                                    <option selected>Choose...</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6" style="padding-top: 37px">
+                                <a href="{{ route('categories.create') }}">Créer une nouvelle catégorie</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Choisir un fichier</label>
-                        <input type="file" class="form-control-file" id="image" name="image">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enregistré</button>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Choisir un fichier</label>
+                            <input type="file" class="form-control-file" id="image" name="image">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistré</button>
                 </form>
-
+                {{--                @endif--}}
             </div>
 
         </div>

@@ -32,7 +32,7 @@
                     <ul class="list-unstyled">
                         <li><a href="{{ url('/') }}" class="text-white">Accueil</a></li>
                         <li><a href="{{ route('articles.index') }}" class="text-white">Articles</a></li>
-                        <li><a href="#" class="text-white">Catégories</a></li>
+                        <li><a href="{{ route('categories.index') }}" class="text-white">Catégories</a></li>
                     </ul>
                 </div>
             </div>
