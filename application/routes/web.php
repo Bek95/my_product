@@ -17,6 +17,9 @@ Route::get('/', 'MainController@home');
 Route::get('articles/overview', 'ArticleController@index')->name('articles.index');
 Route::get('articles/new', 'ArticleController@create')->name('articles.create');
 Route::post('articles/store', 'ArticleController@store')->name('articles.store');
+Route::get('articles/{id}/edit', 'ArticleController@edit')->name('articles.edit');
+Route::put('articles/{id}/update', 'ArticleController@update')->name('articles.update');
+Route::get('articles/{id}/destroy', 'ArticleController@destroy')->name('articles.destroy');
 
 //Categories Routes
 Route::get('categories/overview', 'CategorieController@index')->name('categories.index');

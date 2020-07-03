@@ -21,6 +21,7 @@ class CreateArticlesTable extends Migration
             $table->string('description');
             $table->float('price');
             $table->text('image');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

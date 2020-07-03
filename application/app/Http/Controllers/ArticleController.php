@@ -29,7 +29,6 @@ class ArticleController extends Controller
     {
         $categories = Category::all();
 
-
         return view('articles.create', compact('categories'));
     }
 
@@ -41,7 +40,12 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request);
+        //Ici je récupère la cat présente en bdd via sa valeur
+        $firstCategoryArticle = Category::find($request->input('category_first'));
+        $secondCategoryArticle = Category::find($request->input('category_second'));
+        //ici je récupère uniquement son Id afin de l'attaché à l'article en création dans la table pivot article_category
+        $firstCategoryId = $firstCategoryArticle['id'];
+        $secondCategoryId = $secondCategoryArticle['id'];
         //Ici j'instancie mon Model
         $article = new Article();
         //je lui affilie les valeurs que je récupère avec l'objet Request
@@ -49,9 +53,7 @@ class ArticleController extends Controller
         $article->color = $request->input('color');
         $article->size = $request->input('size');
         $article->price = $request->input('price');
-//        $article->category = $request->input('category');
         $article->description = $request->input('description');
-        $article->categories()->attach($article->id);
 
         //ici, je m'occupe du traitement  de l'image
         $image = $request->file('image');
@@ -71,6 +73,9 @@ class ArticleController extends Controller
         $article->image = $file;
         // et je sauvegarde dans la bdd
         $article->save();
+
+        //Ici j'attache article_id à la category_id dans la table pivot
+        $article->categories()->attach([$firstCategoryId, $secondCategoryId]);
 
         // ensuite je redirige sur la vue de tout les articles
         return redirect()->route('articles.index');
@@ -95,7 +100,9 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $categories = Category::all();
+        $article = Article::find($id);
+        return view('articles.edit', compact('article', 'categories'));
     }
 
     /**
@@ -107,7 +114,34 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+//        dd($id, $request);
+        $article = Article::find($id);
+        $article->categories()->detach();
+        $article->name = $request->input('name');
+        $article->color = $request->input('color');
+        $article->size = $request->input('size');
+        $article->price = $request->input('price');
+        $article->description = $request->input('description');
+
+        $categoryArticle = Category::find($request->input('category'));
+        $categoryId = $categoryArticle['id'];
+
+//        Une condition pour remplacer si il y a une nouvelle image
+        if ($request->file('image')) {
+            $image = $request->file('image');
+            $imageFullName = $image->getClientOriginalName();
+            $imageName = pathinfo($imageFullName, PATHINFO_FILENAME);
+            $extension = $image->getClientOriginalExtension();
+            $file = time() . '_' . $imageName . '.' . $extension;
+            $image->storeAs('public/articles/', $file);
+            // ici on remplace donc l'image par la nouvelle
+            $article->image = $file;
+        }
+
+        $article->categories()->attach($categoryId);
+        $article->save();
+
+        return redirect()->route('articles.index');
     }
 
     /**
@@ -118,6 +152,8 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $article = Article::find($id);
+        $article->delete();
+        return redirect()->back()->with('success', 'L\'article a bien été supprimé');
     }
 }

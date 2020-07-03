@@ -51,7 +51,7 @@ class CategorieController extends Controller
             $category->name = $data['name'];
             $category->save();
 
-            return redirect()->route('articles.index');
+            return redirect()->route('categories.index');
         }
     }
 
