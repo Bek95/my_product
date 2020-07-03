@@ -48,6 +48,11 @@
     </div>
 </header>
 
+<!-- inclusion du message succès-->
+<div class="container">
+    @include('incs.messages')
+</div>
+
 <!-- start main -->
 @yield('content')
 <!-- end main -->

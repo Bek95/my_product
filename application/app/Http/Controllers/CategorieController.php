@@ -51,7 +51,7 @@ class CategorieController extends Controller
             $category->name = $data['name'];
             $category->save();
 
-            return redirect()->route('categories.index');
+            return redirect()->route('categories.index')->with('success', 'Votre catégorie a été créé avec succès');
         }
     }
 
@@ -97,7 +97,7 @@ class CategorieController extends Controller
         $category->name = $data['name'];
         $category->save();
 
-        return redirect()->route('categories.index');
+        return redirect()->route('categories.index')->with('success', 'Votre catégorie a été modifié avec succès');
     }
 
     /**

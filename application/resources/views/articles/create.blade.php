@@ -26,8 +26,8 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="category_first">Categories</label>
-                            <select id="category_first" class="form-control" name="category_first">
-                                <option selected>Choose...</option>
+                            <select id="category_first" class="form-control" name="category_first" required>
+                                <option selected value="choice_cat1">Choose...</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
@@ -36,7 +36,7 @@
                         <div class="form-group col-md-6">
                             <label for="category_second">Categories additionnelles</label>
                             <select id="category_second" class="form-control" name="category_second">
-                                <option selected>Choose...</option>
+                                <option selected value="choice_cat2">Choose...</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach

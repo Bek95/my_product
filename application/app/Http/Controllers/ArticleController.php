@@ -27,6 +27,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
+        //ici je créé une variable avec toutes les catégories afin de l'envoyer à la vue
         $categories = Category::all();
 
         return view('articles.create', compact('categories'));
@@ -40,6 +41,7 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request);
         //Ici je récupère la cat présente en bdd via sa valeur
         $firstCategoryArticle = Category::find($request->input('category_first'));
         $secondCategoryArticle = Category::find($request->input('category_second'));
@@ -75,10 +77,16 @@ class ArticleController extends Controller
         $article->save();
 
         //Ici j'attache article_id à la category_id dans la table pivot
-        $article->categories()->attach([$firstCategoryId, $secondCategoryId]);
-
+        //mais je gère au cas où la possibilté de que le choix de la cat 1 ou cat 2 soit null ou
+        if ($firstCategoryId === null){
+            $article->categories()->attach($secondCategoryId);
+        }elseif ($secondCategoryId === null){
+            $article->categories()->attach($firstCategoryId);
+        }else{
+            $article->categories()->attach([$firstCategoryId, $secondCategoryId,]);
+        }
         // ensuite je redirige sur la vue de tout les articles
-        return redirect()->route('articles.index');
+        return redirect()->route('articles.index')->with('success', 'Votre ajout a été effectué avec succès !');
     }
 
     /**
@@ -141,7 +149,7 @@ class ArticleController extends Controller
         $article->categories()->attach($categoryId);
         $article->save();
 
-        return redirect()->route('articles.index');
+        return redirect()->route('articles.index')->with('success', 'Vos modifications ont été effectué avec succès !');
     }
 
     /**
@@ -154,6 +162,6 @@ class ArticleController extends Controller
     {
         $article = Article::find($id);
         $article->delete();
-        return redirect()->back()->with('success', 'L\'article a bien été supprimé');
+        return redirect()->route('articles.index')->with('success', 'L\'article a bien été supprimé');
     }
 }
