@@ -26,7 +26,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="category_first">Categories</label>
-                            <select id="category_first" class="form-control" name="category_first" required>
+                            <select id="category_first" class="form-control" name="category_first">
                                 <option selected value="choice_cat1">Choose...</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -46,17 +46,17 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Nom</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="color">Couleur</label>
-                            <input type="text" class="form-control" id="color" name="color">
+                            <input type="text" class="form-control" id="color" name="color" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="size">Taille</label>
-                            <select id="size" class="form-control" name="size">
+                            <select id="size" class="form-control" name="size" required>
                                 <option selected>Choose...</option>
                                 <option>S</option>
                                 <option>L</option>
@@ -65,16 +65,16 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="price">Prix</label>
-                            <input type="number" class="form-control" id="price" name="price">
+                            <input type="number" class="form-control" id="price" name="price" required>
                         </div>
                     </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="image">Choisir un fichier</label>
-                            <input type="file" class="form-control-file" id="image" name="image">
+                            <input type="file" class="form-control-file" id="image" name="image" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Enregistré</button>
                 </form>

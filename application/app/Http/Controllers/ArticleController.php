@@ -16,8 +16,9 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::all();
+        $categories = Category::all();
 
-        return view('articles.index', compact('articles'));
+        return view('articles.index', compact('articles', 'categories'));
     }
 
     /**
@@ -164,4 +165,5 @@ class ArticleController extends Controller
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'L\'article a bien été supprimé');
     }
+
 }

@@ -27,7 +27,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Nom</label>
-                            <input type="text" class="form-control" id="name" name="name" value="">
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Enregistré</button>

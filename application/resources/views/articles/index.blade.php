@@ -15,7 +15,6 @@
 
         <div class="album py-5 bg-light">
             <div class="container">
-
                 <div class="row">
                     <!--  Ici je vérifie si la variable $articles existe, si oui elle s'affiche et je boucle dessus-->
                     @if(isset($articles))
@@ -25,13 +24,21 @@
                                     <img class="card-img-top" src="/storage/articles/{{ $article->image }}" alt="Card image cap">
                                     <div class="card-body">
                                         <h3>{{ $article->name }}</h3>
-                                        <h4>Couleur : {{ $article->color }}</h4>
-                                        <h4>Taille: {{ strtoupper($article->size) }}</h4>
+                                        <h5>Catégorie : </h5>
+                                        <!-- Ici je boucle sur les différentes catégories (ou non) aux quelles l'article peu appartenir  -->
+                                        @foreach($article->categories as $category)
+                                            <p class="card-text">{{ $category->name}}</p>
+                                        @endforeach
+                                        <h5>Couleur : </h5>
+                                        <p>{{ $article->color }}</p>
+                                        <h5>Taille: </h5>
+                                        <p class="card-text">{{ strtoupper($article->size) }}</p>
+                                        <h6>Descriptif : </h6>
                                         <p class="card-text">{{ $article->description }}</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-danger">
-                                                    <a href="{{ route('articles.destroy', $article->id) }}" style="color: white">Delete</a>
+                                                    <a href="{{ route('articles.destroy', $article->id) }}" class="text-white">Delete</a>
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-outline-secondary">
                                                     <a href="{{ route('articles.edit', $article->id) }}">Edit</a>

@@ -7,7 +7,7 @@
                 <h1 class="jumbotron-heading">Les catégories</h1>
                 <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita, ubi nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum ac lasciviam.</p>
                 <p>
-                    <a href="{{ route('categories.create') }}" class="btn btn-primary my-2">Ajouter une nouvelle catégories</a>
+                    <a href="{{ route('categories.create') }}" class="btn btn-primary my-2">Ajouter une nouvelle catégorie</a>
                     <a href="{{ route('articles.create') }}" class="btn btn-secondary my-2">Ajouter une nouvelle chemise</a>
                 </p>
             </div>
