@@ -26,7 +26,9 @@
                                         <h3>{{ $category->name }}</h3>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group">
-{{--                                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>--}}
+                                                <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                    <a href="{{ route('categories.show', $category->id) }}">View</a>
+                                                </button>
                                                 <button type="button" class="btn btn-sm btn-outline-secondary">
                                                     <a href="{{ route('categories.edit', $category->id) }}">Edit</a>
                                                 </button>

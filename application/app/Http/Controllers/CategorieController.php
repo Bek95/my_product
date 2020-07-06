@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategorieController extends Controller
 {
@@ -20,9 +21,9 @@ class CategorieController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     *  Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -37,7 +38,7 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate($request, [
-            'name' => 'required|string',
+            'name' => 'required|string|max:50',
         ]);
 
         $category = new Category();
@@ -56,25 +57,30 @@ class CategorieController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     *  Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($id)
     {
-        //
+            $category = Category::find($id);
+            Log::info('la catégorie a pour id : ' . $category);
+            $articles = $category->articles;
+
+            return view('categories.show', compact('articles', 'category'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     *  * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id)
     {
         $category = Category::find($id);
+        Log::info('la catégorie a pour id : ' . $category);
 
         return view('categories.edit', compact('category'));
     }
@@ -90,7 +96,7 @@ class CategorieController extends Controller
     public function update(Request $request, $id)
     {
         $data = $this->validate($request, [
-            'name' => 'required|string',
+            'name' => 'required|string|max:50',
         ]);
 
         $category = Category::find($id);
@@ -100,14 +106,4 @@ class CategorieController extends Controller
         return redirect()->route('categories.index')->with('success', 'Votre catégorie a été modifié avec succès');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

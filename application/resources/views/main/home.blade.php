@@ -4,7 +4,7 @@
     <main role="main">
         <section class="jumbotron text-center">
             <div class="container">
-                <h1 class="jumbotron-heading">Bienvenue sur le top de chez top en matière de chemises pour homme</h1>
+                <h1 class="jumbotron-heading">Et licet quocumque oculos flexeris feminas adfatim multas spectare</h1>
                 <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita,
                     ubi nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum
                     ac lasciviam.</p>

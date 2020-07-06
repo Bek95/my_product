@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ArticleController extends Controller
 {
@@ -42,7 +43,6 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request);
         //Ici je récupère la cat présente en bdd via sa valeur
         $firstCategoryArticle = Category::find($request->input('category_first'));
         $secondCategoryArticle = Category::find($request->input('category_second'));
@@ -91,17 +91,6 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -111,6 +100,8 @@ class ArticleController extends Controller
     {
         $categories = Category::all();
         $article = Article::find($id);
+        Log::info('L\'id de l\'article est : ' . $id );
+
         return view('articles.edit', compact('article', 'categories'));
     }
 
@@ -123,8 +114,10 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
-//        dd($id, $request);
         $article = Article::find($id);
+
+        Log::info('L\'article a pour id : ' . $id );
+
         $article->categories()->detach();
         $article->name = $request->input('name');
         $article->color = $request->input('color');
@@ -162,6 +155,7 @@ class ArticleController extends Controller
     public function destroy($id)
     {
         $article = Article::find($id);
+        Log::info('L\' article ayant l\'id . (id) a été supprimé');
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'L\'article a bien été supprimé');
     }
