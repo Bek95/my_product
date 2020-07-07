@@ -62,7 +62,7 @@ class CategorieController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($id)
+    public function showArticleByCategory($id)
     {
             $category = Category::find($id);
             Log::info('la catégorie a pour id : ' . $category);
