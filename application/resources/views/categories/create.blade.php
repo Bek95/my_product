@@ -15,6 +15,15 @@
 
         <div class="album py-5 bg-light">
             <div class="container">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 @if(isset($message) && !empty($message))
                     <div class="alert alert-danger" role="alert">
                         {{ $message }}

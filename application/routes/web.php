@@ -27,5 +27,5 @@ Route::get('categories/new', 'CategorieController@create')->name('categories.cre
 Route::post('categories/store', 'CategorieController@store')->name('categories.store');
 Route::get('categories/{id}/edit', 'CategorieController@edit')->name('categories.edit');
 Route::put('categories/{id}/update', 'CategorieController@update')->name('categories.update');
-Route::get('categories/{id}/show', 'CategorieController@show')->name('categories.show');
+Route::get('categories/{id}/show', 'CategorieController@showArticleByCategory')->name('categories.show');
 

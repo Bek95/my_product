@@ -15,6 +15,15 @@
 
         <div class="album py-5 bg-light">
             <div class="container">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <div class="row">
                     <!--  Ici je vérifie si la variable $articles existe, si oui elle s'affiche et je boucle dessus-->

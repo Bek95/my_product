@@ -6,6 +6,7 @@ use App\Article;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
@@ -43,12 +44,32 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        $categories = Category::all();
+
+        $validator = Validator::make($request->all(), [
+            'checkboxVar' => 'required|min:1|max:2',
+            'name' => 'required|max:50',
+            'color' => 'required|max:50',
+            'size' => 'required|max:50',
+            'price' => 'required',
+            'description' => 'required|max:255',
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('articles/new')
+                ->withErrors($validator)
+                ->withInput()->with([
+                    'categories' => $categories,
+                ]);
+        }
+
         //Ici je récupère la cat présente en bdd via sa valeur
-        $firstCategoryArticle = Category::find($request->input('category_first'));
-        $secondCategoryArticle = Category::find($request->input('category_second'));
+//        $firstCategoryArticle = Category::find($request->input('category_first'));
+//        $secondCategoryArticle = Category::find($request->input('category_second'));
         //ici je récupère uniquement son Id afin de l'attaché à l'article en création dans la table pivot article_category
-        $firstCategoryId = $firstCategoryArticle['id'];
-        $secondCategoryId = $secondCategoryArticle['id'];
+//        $firstCategoryId = $firstCategoryArticle['id'];
+//        $secondCategoryId = $secondCategoryArticle['id'];
         //Ici j'instancie mon Model
         $article = new Article();
         //je lui affilie les valeurs que je récupère avec l'objet Request
@@ -79,15 +100,17 @@ class ArticleController extends Controller
 
         //Ici j'attache article_id à la category_id dans la table pivot
         //mais je gère au cas où la possibilté de que le choix de la cat 1 ou cat 2 soit null ou
-        if ($firstCategoryId === null){
-            $article->categories()->attach($secondCategoryId);
-        }elseif ($secondCategoryId === null){
-            $article->categories()->attach($firstCategoryId);
-        }else{
-            $article->categories()->attach([$firstCategoryId, $secondCategoryId,]);
-        }
+//        if ($firstCategoryId === null){
+//            $article->categories()->attach($secondCategoryId);
+//        }elseif ($secondCategoryId === null){
+//            $article->categories()->attach($firstCategoryId);
+//        }else{
+//            $article->categories()->attach([$firstCategoryId, $secondCategoryId,]);
+//        }
         // ensuite je redirige sur la vue de tout les articles
         return redirect()->route('articles.index')->with('success', 'Votre ajout a été effectué avec succès !');
+
+
     }
 
     /**

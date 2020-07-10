@@ -3,11 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\src\Domain\Category\Service\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CategorieController extends Controller
 {
+    private $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,23 +46,26 @@ class CategorieController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->validate($request, [
-            'name' => 'required|string|max:50',
+        $validateData = Validator::make($request->all(), [
+            'name' => 'required|string|max:60',
         ]);
 
-        $category = new Category();
-        $value = $category::where('name', $data['name'])->first();
-
-        if (strtolower($data['name']) === strtolower($value['name'])){
-            $message = "cette catégorie existe";
-
-            return view('categories.create', compact('message'));
-        }else{
-            $category->name = $data['name'];
-            $category->save();
-
-            return redirect()->route('categories.index')->with('success', 'Votre catégorie a été créé avec succès');
+        if ($validateData->fails()) {
+            return redirect('categories/new')
+                ->withErrors($validateData)
+                ->withInput();
         }
+        $data = $request->all();
+
+        $res = $this->categoryService->createCategory($data);
+
+        if ($res === false) {
+            $message = 'Cette catégorie existe';
+            return view('categories.create', compact('message'));
+
+        }
+
+        return redirect()->route('categories.index')->with('success', 'Votre catégorie a été créé avec succès');
     }
 
     /**
@@ -62,13 +74,13 @@ class CategorieController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($id)
+    public function showArticleByCategory($id)
     {
-            $category = Category::find($id);
-            Log::info('la catégorie a pour id : ' . $category);
-            $articles = $category->articles;
+        $category = Category::find($id);
+        Log::info('la catégorie a pour id : ' . $category);
+        $articles = $category->articles;
 
-            return view('categories.show', compact('articles', 'category'));
+        return view('categories.show', compact('articles', 'category'));
     }
 
     /**
@@ -79,31 +91,37 @@ class CategorieController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::find($id);
-        Log::info('la catégorie a pour id : ' . $category);
+        $category = $this->categoryService->findCategoryById($id);
+        if ($category === null){
+            return view('categories.index')->with('errors', 'Cette catégorie n\'existe pas !');
+        }
 
         return view('categories.edit', compact('category'));
     }
 
     /**
-     * * Update the specified resource in storage.
+     * Update the specified resource in storage.
      *
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
-        $data = $this->validate($request, [
-            'name' => 'required|string|max:50',
+        $validateData = Validator::make($request->all(), [
+            'name' => 'required|string|max:60',
         ]);
 
-        $category = Category::find($id);
-        $category->name = $data['name'];
-        $category->save();
+        if ($validateData->fails()) {
+            return redirect('categories/new')
+                ->withErrors($validateData)
+                ->withInput();
+        }
 
-        return redirect()->route('categories.index')->with('success', 'Votre catégorie a été modifié avec succès');
+        $data = $request->all();
+        $this->categoryService->updateCategory($id, $data);
+
+        return redirect()->route('categories.index')->with('success', 'Votre modification a été effecuté avec succès !');
     }
 
 }
