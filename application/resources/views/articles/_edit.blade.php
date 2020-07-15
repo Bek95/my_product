@@ -14,40 +14,11 @@
         </section>
         <div class="album py-5 bg-light">
             <div class="container">
-                @if (isset($fails))
-                    <div class="alert alert-danger">
-                        <ul>
-                            <li>{{ $fails }}</li>
-                        </ul>
-                    </div>
-                @endif
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-            @endif
                 <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
                     afin de gérer des fichiers-->
                 <form method="post" action="{{ route('articles.update', $article->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('put')
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="categories">Catégories : </label><br/>
-                            @foreach($article->categories as $articleCat)
-                                    <label for="{{ $articleCat->name }}">{{ $articleCat->name }}</label>
-                                    <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $articleCat->id }}]" value="{{ $articleCat->name }}" {{ $articleCat->id ? 'checked' : '' }}>
-                                    @foreach(\App\Category::where('id', '!=' , $articleCat->id)->get() as $category)
-                                            <label for="{{ $category->name }}">{{ $category->name }}</label>
-                                            <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $category->id }}]" value="{{ $category->name }}">
-                                     @endforeach
-                            @endforeach
-                        </div>
-                    </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Nom</label>
@@ -61,11 +32,29 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="size">Taille</label>
-                            <input type="text" class="form-control" id="size" name="size" value="{{ $article->size }}">
+                            <select id="size" class="form-control" name="size">
+                                <option selected>Choose...</option>
+                                <option>S</option>
+                                <option>L</option>
+                                <option>XL</option>
+                            </select>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="price">Prix</label>
                             <input type="number" class="form-control" id="price" name="price" value="{{ $article->price }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="category">Categories</label>
+                            <select id="category" class="form-control" name="category">
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6" style="padding-top: 37px">
+                            <a href="{{ route('categories.create') }}">Créer une nouvelle catégorie</a>
                         </div>
                     </div>
                     <div class="form-group">

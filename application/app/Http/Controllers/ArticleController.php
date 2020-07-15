@@ -111,14 +111,13 @@ class ArticleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id)
     {
         $categories = $this->categoryService->categories();
-        $article = Article::find($id);
-        Log::info('L\'id de l\'article est : ' . $id );
+        $article = $this->articleService->findArticleById($id);
 
         return view('articles.edit', compact('article', 'categories'));
     }
@@ -128,38 +127,61 @@ class ArticleController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, $id)
     {
-        $article = Article::find($id);
 
-        Log::info('L\'article a pour id : ' . $id );
+        $validator = Validator::make($request->all(), [
+            'checkboxCategories' => 'required|min:1|max:2',
+            'name' => 'required|max:50',
+            'color' => 'required|max:50',
+            'size' => 'required|max:50',
+            'price' => 'required',
+            'description' => 'required|max:255',
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-        $article->categories()->detach();
-        $article->name = $request->input('name');
-        $article->color = $request->input('color');
-        $article->size = $request->input('size');
-        $article->price = $request->input('price');
-        $article->description = $request->input('description');
-
-        $categoryArticle = Category::find($request->input('category'));
-        $categoryId = $categoryArticle['id'];
-
-//        Une condition pour remplacer si il y a une nouvelle image
-        if ($request->file('image')) {
-            $image = $request->file('image');
-            $imageFullName = $image->getClientOriginalName();
-            $imageName = pathinfo($imageFullName, PATHINFO_FILENAME);
-            $extension = $image->getClientOriginalExtension();
-            $file = time() . '_' . $imageName . '.' . $extension;
-            $image->storeAs('public/articles/', $file);
-            // ici on remplace donc l'image par la nouvelle
-            $article->image = $file;
+        if ($validator->fails()) {
+            return redirect('articles/new')
+                ->withErrors($validator)
+                ->withInput()->with([
+                    'categories' => $categories,
+                ]);
         }
 
-        $article->categories()->attach($categoryId);
-        $article->save();
+        $dataRequest = $request->all();
+        $tabCategories = $dataRequest['checkboxCategories'];
+
+        $data = [
+            'name' => $request->input('name'),
+            'color' => $request->input('color'),
+            'size' => $request->input('size'),
+            'price' => $request->input('price'),
+            'description' => $request->input('description'),
+        ];
+
+        //        Une condition pour remplacer si il y a une nouvelle image
+        if ($request->file('image')) {
+            $file = $this->imageManager->imageStorage($request->file('image'));
+            $data = [
+                'name' => $request->input('name'),
+                'color' => $request->input('color'),
+                'size' => $request->input('size'),
+                'price' => $request->input('price'),
+                'description' => $request->input('description'),
+                'image' => $file,
+            ];
+        }
+
+        $res = $this->articleService->updateArticle($id, $data, $tabCategories);
+
+        if ($res != true){
+            $fails = 'un problème est survenu ! ';
+            return redirect()->back()->with([
+                'fails' => $fails,
+            ]);
+        }
 
         return redirect()->route('articles.index')->with('success', 'Vos modifications ont été effectué avec succès !');
     }

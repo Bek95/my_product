@@ -59,12 +59,9 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="size">Taille</label>
-                                <select id="size" class="form-control" name="size" required>
-                                    <option selected>Choose...</option>
-                                    <option>S</option>
-                                    <option>L</option>
-                                    <option>XL</option>
-                                </select>
+                                <label for="size">Taille</label>
+                                {{ dd($article) }}
+                                <input type="text" value="{{ $article->size }}" name="size" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="price">Prix</label>

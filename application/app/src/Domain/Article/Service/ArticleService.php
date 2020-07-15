@@ -42,4 +42,14 @@ class ArticleService
         return $this->articleRepository->createArticle($params, $tabCategories);
     }
 
+    public function findArticleById($id)
+    {
+        return $this->articleRepository->findArticleById($id);
+    }
+
+    public function updateArticle($id, $data, $tabCategories)
+    {
+        return $this->articleRepository->updateArticle($id, $data, $tabCategories);
+    }
+
 }
