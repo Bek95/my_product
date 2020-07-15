@@ -14,6 +14,13 @@
         </section>
         <div class="album py-5 bg-light">
             <div class="container">
+                @if (isset($fails))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ $fails }}</li>
+                        </ul>
+                    </div>
+                @endif
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -34,7 +41,7 @@
                                 <label for="categories">Catégories (2 max) : </label><br/>
                                 @foreach($categories as $category)
                                     <label for="{{ $category->name }}">{{ $category->name }}</label>
-                                    <input class="custom-checkbox" type="checkbox" name="checkboxVar[{{ $category->id }}]" value="{{ $category->name }}">
+                                    <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $category->id }}]" value="{{ $category->name }}">
                                 @endforeach
                             </div>
 

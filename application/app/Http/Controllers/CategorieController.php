@@ -10,8 +10,16 @@ use Illuminate\Support\Facades\Validator;
 
 class CategorieController extends Controller
 {
+    /**
+     * @var CategoryService
+     */
     private $categoryService;
 
+    /**
+     * CategorieController constructor.
+     *
+     * @param CategoryService $categoryService
+     */
     public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
@@ -24,7 +32,7 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = $this->categoryService->categories();
 
         return view('categories.index', compact('categories'));
     }
@@ -40,6 +48,8 @@ class CategorieController extends Controller
     }
 
     /**
+     *  Store a newly created resource in storage.
+     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
@@ -92,6 +102,7 @@ class CategorieController extends Controller
     public function edit($id)
     {
         $category = $this->categoryService->findCategoryById($id);
+
         if ($category === null){
             return view('categories.index')->with('errors', 'Cette catégorie n\'existe pas !');
         }
