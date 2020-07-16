@@ -4,7 +4,10 @@
 namespace App\src\Infrastructure\Article\Repository;
 
 use App\Article;
+use App\Exceptions\Article\ArticleNotCreatedException;
+use App\Exceptions\Article\ArticleNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ArticleRepository
@@ -36,22 +39,29 @@ class ArticleRepository
 
     /**
      * @param array $params
+     * @param $tabCategories
      * @return bool
+     * @throws ArticleNotCreatedException
      */
     public function createArticle(array $params, $tabCategories): bool
     {
-        $article = $this->model($this->article, $params);
-        $res = $article->save();
+        try {
+            $article = $this->model($this->article, $params);
+            $res = $article->save();
 
-        $categoriesId = [];
+            $categoriesId = [];
 
-        foreach ($tabCategories as $categoryId => $categoryName) {
-            $categoriesId[] = $categoryId;
+            foreach ($tabCategories as $categoryId => $categoryName) {
+                $categoriesId[] = $categoryId;
+            }
+            //Ici j'attache article_id à la ou les category_id dans la table pivot
+            $article->categories()->attach($categoriesId);
+
+            return $res;
+
+        }catch (\Exception $exception) {
+            throw new ArticleNotCreatedException('THIS ARTICLE WAS NOT CREATED WITH PARAMS ' . $params . ' AND CATEGORIES : ' . $tabCategories);
         }
-        //Ici j'attache article_id à la ou les category_id dans la table pivot
-        $article->categories()->attach($categoriesId);
-
-        return $res;
     }
 
     /**
@@ -82,38 +92,53 @@ class ArticleRepository
      * @param array $data
      * @param array $tabCategories
      * @return bool
+     * @throws ArticleNotFoundException
      */
     public function updateArticle(string $id, array $data, array $tabCategories):bool
     {
-        $article = $this->findArticleById($id);
-        $article->categories()->detach();
-        $this->model($article, $data);
+        try {
+            $article = $this->findArticleById($id);
+            $article->categories()->detach();
+            $this->model($article, $data);
+            Log::info('it is th article : ' . $article);
 
-        $categoriesId = [];
-        foreach ($tabCategories as $categoryId => $categoryName) {
-            $categoriesId[] = $categoryId;
+            $categoriesId = [];
+            foreach ($tabCategories as $categoryId => $categoryName) {
+                $categoriesId[] = $categoryId;
+            }
+            //Ici j'attache article_id à la ou les category_id dans la table pivot
+            $article->categories()->attach($categoriesId);
+
+            return $article->save();
+        }catch (\Exception $exception) {
+            throw new ArticleNotFoundException('THIS ARTICLE : ' . $id . ' NOT FOUND !');
         }
-        //Ici j'attache article_id à la ou les category_id dans la table pivot
-        $article->categories()->attach($categoriesId);
-
-        return $article->save();
     }
 
     /**
      * @param string $id
      * @return bool
-     * @throws \Exception
+     * @throws ArticleNotFoundException
      */
     public function destroyArticle(string $id): bool
     {
-        $article = $this->findArticleById($id);
-        $fileToDelete = '/public/articles/' . $article->image;
+        try {
+            $article = $this->findArticleById($id);
+            $fileToDelete = '/public/articles/' . $article->image;
+            Log::info($article);
+            Log::info($fileToDelete);
+            $res = $article->delete();
+            Log::info($res);
 
-        if (Storage::exists($fileToDelete)) {
-            Storage::delete($fileToDelete);
+            if (Storage::exists($fileToDelete)) {
+                Storage::delete($fileToDelete);
+            }
+
+            return $res;
+
+        }catch (\Exception $exception){
+            throw new ArticleNotFoundException('THIS ARTICLE : ' . $id . ' NOT FOUND !');
         }
-
-        return $article->delete();
     }
 
 }
