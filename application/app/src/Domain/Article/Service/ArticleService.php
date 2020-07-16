@@ -4,6 +4,7 @@
 namespace App\src\Domain\Article\Service;
 
 
+use App\Article;
 use App\src\Infrastructure\Article\Repository\ArticleRepository;
 
 class ArticleService
@@ -37,19 +38,39 @@ class ArticleService
      * @param array $params
      * @return bool
      */
-    public function createArticle(array $params, $tabCategories): bool
+    public function createArticle(array $params, array $tabCategories): bool
     {
         return $this->articleRepository->createArticle($params, $tabCategories);
     }
 
-    public function findArticleById($id)
+    /**
+     * @param $id
+     * @return \App\Article
+     */
+    public function findArticleById(string $id): Article
     {
         return $this->articleRepository->findArticleById($id);
     }
 
-    public function updateArticle($id, $data, $tabCategories)
+    /**
+     * @param string $id
+     * @param array $data
+     * @param array $tabCategories
+     * @return bool
+     */
+    public function updateArticle(string $id, array $data, array $tabCategories)
     {
         return $this->articleRepository->updateArticle($id, $data, $tabCategories);
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     * @throws \Exception
+     */
+    public function destroyArticle(string $id): bool
+    {
+        return $this->articleRepository->destroyArticle($id);
     }
 
 }

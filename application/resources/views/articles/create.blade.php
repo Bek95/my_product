@@ -49,28 +49,26 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="name">Nom</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="color">Couleur</label>
-                                <input type="text" class="form-control" id="color" name="color" required>
+                                <input type="text" class="form-control" id="color" name="color" value="{{ old('color') }}" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="size">Taille</label>
-                                <label for="size">Taille</label>
-                                {{ dd($article) }}
-                                <input type="text" value="{{ $article->size }}" name="size" required>
+                                <input type="text" class="form-control" id="size" name="size" value="{{ old('size') }}" required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="price">Prix</label>
-                                <input type="number" class="form-control" id="price" name="price" required>
+                                <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description') }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="image">Choisir un fichier</label>

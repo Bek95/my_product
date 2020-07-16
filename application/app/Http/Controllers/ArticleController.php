@@ -2,21 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Article;
-use App\Category;
 use App\src\Domain\Article\Service\ArticleService;
 use App\src\Domain\Category\Service\CategoryService;
 use App\src\Domain\Utilities\ImageManager;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
+    /**
+     * @var CategoryService
+     */
     private $categoryService;
+
+    /**
+     * @var ArticleService
+     */
     private $articleService;
+
+    /**
+     * @var ImageManager
+     */
     private $imageManager;
 
+    /**
+     * ArticleController constructor.
+     *
+     * @param CategoryService $categoryService
+     * @param ArticleService $articleService
+     * @param ImageManager $imageManager
+     */
     public function __construct(CategoryService $categoryService, ArticleService $articleService, ImageManager $imageManager)
     {
         $this->categoryService = $categoryService;
@@ -69,7 +84,7 @@ class ArticleController extends Controller
             'color' => 'required|max:50',
             'size' => 'required|max:50',
             'price' => 'required',
-            'description' => 'required|max:255',
+            'description' => 'required|max:455',
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -114,7 +129,7 @@ class ArticleController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $categories = $this->categoryService->categories();
         $article = $this->articleService->findArticleById($id);
@@ -123,13 +138,13 @@ class ArticleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param Request $request
+     * @param $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
 
         $validator = Validator::make($request->all(), [
@@ -138,7 +153,7 @@ class ArticleController extends Controller
             'color' => 'required|max:50',
             'size' => 'required|max:50',
             'price' => 'required',
-            'description' => 'required|max:255',
+            'description' => 'required|max:455',
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -161,7 +176,7 @@ class ArticleController extends Controller
             'description' => $request->input('description'),
         ];
 
-        //        Une condition pour remplacer si il y a une nouvelle image
+        //  Une condition pour remplacer si il y a une nouvelle image
         if ($request->file('image')) {
             $file = $this->imageManager->imageStorage($request->file('image'));
             $data = [
@@ -189,15 +204,22 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $article = Article::find($id);
-        Log::info('L\' article ayant l\'id . (id) a été supprimé');
-        $article->delete();
-        return redirect()->route('articles.index')->with('success', 'L\'article a bien été supprimé');
+        $res = $this->articleService->destroyArticle($id);
+
+        if ($res == true) {
+            return redirect()->route('articles.index')->with('success', 'L\'article a bien été supprimé');
+        }else {
+            $fails = 'un problème est survenu ! ';
+            return redirect()->back()->with([
+                'fails' => $fails,
+            ]);
+        }
     }
 
 }

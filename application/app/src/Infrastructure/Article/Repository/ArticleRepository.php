@@ -5,6 +5,7 @@ namespace App\src\Infrastructure\Article\Repository;
 
 use App\Article;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleRepository
 {
@@ -67,12 +68,22 @@ class ArticleRepository
         return $articleModel;
     }
 
-    public function findArticleById($id)
+    /**
+     * @param string $id
+     * @return Article
+     */
+    public function findArticleById(string $id): Article
     {
         return $this->articleModel->find($id);
     }
 
-    public function updateArticle($id, $data, $tabCategories)
+    /**
+     * @param string $id
+     * @param array $data
+     * @param array $tabCategories
+     * @return bool
+     */
+    public function updateArticle(string $id, array $data, array $tabCategories):bool
     {
         $article = $this->findArticleById($id);
         $article->categories()->detach();
@@ -82,12 +93,27 @@ class ArticleRepository
         foreach ($tabCategories as $categoryId => $categoryName) {
             $categoriesId[] = $categoryId;
         }
-
         //Ici j'attache article_id à la ou les category_id dans la table pivot
         $article->categories()->attach($categoriesId);
 
         return $article->save();
+    }
 
+    /**
+     * @param string $id
+     * @return bool
+     * @throws \Exception
+     */
+    public function destroyArticle(string $id): bool
+    {
+        $article = $this->findArticleById($id);
+        $fileToDelete = '/public/articles/' . $article->image;
+
+        if (Storage::exists($fileToDelete)) {
+            Storage::delete($fileToDelete);
+        }
+
+        return $article->delete();
     }
 
 }

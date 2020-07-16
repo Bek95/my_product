@@ -5,7 +5,8 @@
         <section class="jumbotron text-center">
             <div class="container">
                 <h1 class="jumbotron-heading">Modifier les caratéristiques d'une chemise</h1>
-                <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita, ubi nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum ac lasciviam.</p>
+                <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita, ubi
+                    nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum ac lasciviam.</p>
                 <p>
                     <a href="{{ route('articles.index') }}" class="btn btn-primary my-2">Retour</a>
                     {{--                <a href="#" class="btn btn-secondary my-2">Secondary action</a>--}}
@@ -40,11 +41,15 @@
                             <label for="categories">Catégories : </label><br/>
                             @foreach($article->categories as $articleCat)
                                     <label for="{{ $articleCat->name }}">{{ $articleCat->name }}</label>
-                                    <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $articleCat->id }}]" value="{{ $articleCat->name }}" {{ $articleCat->id ? 'checked' : '' }}>
-                                    @foreach(\App\Category::where('id', '!=' , $articleCat->id)->get() as $category)
-                                            <label for="{{ $category->name }}">{{ $category->name }}</label>
-                                            <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $category->id }}]" value="{{ $category->name }}">
-                                     @endforeach
+                                    <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $articleCat->id }}]"
+                                           value="{{ $articleCat->name }}" {{ $articleCat->id ? 'checked' : '' }}>
+{{--                                @foreach(\App\Category::where('id', '!=', $articleCat->id )->get() as $category)--}}
+{{--                                    <label for="{{ $category->name }}">{{ $category->name }}</label>--}}
+{{--                                    <input type="checkbox" name="otherCategories[{{ $category->id }}]" value="{{ $category->name }}">--}}
+{{--                                @endforeach--}}
+{{--                                    <input type="checkbox" name="otherCategories" value="{{ \App\Category::where('id', '!=', $articleCat->id )->get() }}">--}}
+{{--                                {{ dd(\App\Category::where('id', '!=', $articleCat->id )->get()) }}--}}
+
                             @endforeach
                         </div>
                     </div>
