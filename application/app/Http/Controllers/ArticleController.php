@@ -40,7 +40,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * * Display a listing of the resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -69,10 +69,9 @@ class ArticleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \App\Exceptions\Article\ArticleNotCreatedException
      */
     public function store(Request $request)
     {
@@ -138,11 +137,10 @@ class ArticleController extends Controller
     }
 
     /**
-     * * Update the specified resource in storage.
-     *
      * @param Request $request
-     * @param $id
+     * @param string $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \App\Exceptions\Article\ArticleNotFoundException
      */
     public function update(Request $request, string $id)
     {

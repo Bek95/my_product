@@ -48,11 +48,11 @@ class CategorieController extends Controller
     }
 
     /**
-     *  Store a newly created resource in storage.
+     * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \App\Exceptions\Category\CategoryNotCreatedException
      */
     public function store(Request $request)
     {
@@ -86,7 +86,7 @@ class CategorieController extends Controller
      */
     public function showArticleByCategory($id)
     {
-        $category = Category::find($id);
+        $category = $this->categoryService->findCategoryById($id);
         Log::info('la catégorie a pour id : ' . $category);
         $articles = $category->articles;
 
@@ -116,6 +116,7 @@ class CategorieController extends Controller
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \App\Exceptions\Category\CategoryNotFoundException
      */
     public function update(Request $request, $id)
     {

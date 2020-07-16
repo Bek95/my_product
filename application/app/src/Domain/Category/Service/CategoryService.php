@@ -25,6 +25,7 @@ class CategoryService
     /**
      * @param array $data
      * @return bool
+     * @throws \App\Exceptions\Category\CategoryNotCreatedException
      */
     public function createCategory(array $data)
     {
@@ -44,6 +45,7 @@ class CategoryService
      * @param string $id
      * @param array $data
      * @return bool
+     * @throws \App\Exceptions\Category\CategoryNotFoundException
      */
     public function updateCategory(string $id, array $data)
     {

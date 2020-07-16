@@ -25,9 +25,7 @@ class ArticleService
     }
 
     /**
-     * to display all articles
-     *
-     * @return \App\Article[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function articles()
     {
@@ -36,7 +34,9 @@ class ArticleService
 
     /**
      * @param array $params
+     * @param array $tabCategories
      * @return bool
+     * @throws \App\Exceptions\Article\ArticleNotCreatedException
      */
     public function createArticle(array $params, array $tabCategories): bool
     {
@@ -57,6 +57,7 @@ class ArticleService
      * @param array $data
      * @param array $tabCategories
      * @return bool
+     * @throws \App\Exceptions\Article\ArticleNotFoundException
      */
     public function updateArticle(string $id, array $data, array $tabCategories)
     {

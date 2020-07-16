@@ -5,9 +5,11 @@ namespace App\src\Infrastructure\Category\Repository;
 
 
 use App\Category;
+use App\Exceptions\Category\CategoryNotCreatedException;
+use App\Exceptions\Category\CategoryNotFoundException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\Types\Object_;
+use Illuminate\Support\Facades\Log;
 
 class CategoryRepository
 {
@@ -43,20 +45,26 @@ class CategoryRepository
     /**
      * @param array $data
      * @return bool
+     * @throws CategoryNotCreatedException
      */
     public function createCategory(array $data): bool
     {
-        $category = $this->category;
-        $value = $category::where('name', $data['name'])->first();
+        try {
+            $category = $this->category;
+            $value = $category::where('name', $data['name'])->first();
+            Log::info('CATEGORY NAME : ' . $value);
 
-        if (strtolower($data['name']) === strtolower($value['name'])){
-            $res = false;
+            if (strtolower($data['name']) === strtolower($value['name'])){
+                $res = false;
 
-        }else{
-            $category->name = $data['name'];
-            $res = $category->save();
+            }else{
+                $category->name = $data['name'];
+                $res = $category->save();
+            }
+            return $res;
+        }catch (\Exception $exception){
+            throw new CategoryNotCreatedException('CATEGORY NOT CREATED ');
         }
-        return $res;
     }
 
     /**
@@ -72,13 +80,19 @@ class CategoryRepository
      * @param string $id
      * @param array $data
      * @return bool
+     * @throws CategoryNotFoundException
      */
     public function updateCategory(string $id, array $data): bool
     {
-        $category = $this->findCategorybyId($id);
-        $category->name = $data['name'];
+        try {
+            $category = $this->findCategorybyId($id);
+            $category->name = $data['name'];
 
-        return $category->save();
+            return $category->save();
+        }catch (\Exception $exception) {
+
+            throw new CategoryNotFoundException('CATEGORY WITH THE ID : ' . $id . ' NOT FOUND' );
+        }
     }
 
 }

@@ -47,6 +47,7 @@ class ArticleRepository
     {
         try {
             $article = $this->model($this->article, $params);
+            Log::info('This ' . $article . ' WAS CREATED WITH THIS PARAMS : ' . json_encode($params) . ' AND AFFILIATED CATEGORIES' . json_encode($tabCategories) );
             $res = $article->save();
 
             $categoriesId = [];
@@ -60,7 +61,7 @@ class ArticleRepository
             return $res;
 
         }catch (\Exception $exception) {
-            throw new ArticleNotCreatedException('THIS ARTICLE WAS NOT CREATED WITH PARAMS ' . $params . ' AND CATEGORIES : ' . $tabCategories);
+            throw new ArticleNotCreatedException('THIS ARTICLE WAS NOT CREATED WITH PARAMS ' . json_encode($params) . ' AND AFFILIATED CATEGORIES : ' . json_encode($tabCategories));
         }
     }
 
@@ -100,7 +101,7 @@ class ArticleRepository
             $article = $this->findArticleById($id);
             $article->categories()->detach();
             $this->model($article, $data);
-            Log::info('it is th article : ' . $article);
+            Log::info('THE ARTICLE : ' . $article . ' WAS UPDATED');
 
             $categoriesId = [];
             foreach ($tabCategories as $categoryId => $categoryName) {
@@ -129,6 +130,7 @@ class ArticleRepository
             Log::info($fileToDelete);
             $res = $article->delete();
             Log::info($res);
+            Log::info('THE ARTICLE : ' . $article . ' WAS DELETED');
 
             if (Storage::exists($fileToDelete)) {
                 Storage::delete($fileToDelete);
