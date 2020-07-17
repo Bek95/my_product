@@ -6,8 +6,6 @@ use App\Http\Requests\ArticleRequest;
 use App\src\Domain\Article\Service\ArticleService;
 use App\src\Domain\Category\Service\CategoryService;
 use App\src\Domain\Utilities\ImageManager;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller
 {
@@ -103,62 +101,30 @@ class ArticleController extends Controller
     {
         $categories = $this->categoryService->categories();
         $article = $this->articleService->findArticleById($id);
+        $articleCats = $article->categories;// ici je récupère la ou les catégorie(s) lié à l'article
 
-        return view('articles.edit', compact('article', 'categories'));
+        return view('articles.edit')->with([
+            'article' => $article,
+            'categories' => $categories,
+            'articleCats' => $articleCats,
+        ]);
     }
 
     /**
-     * @param Request $request
+     * @param ArticleRequest $request
      * @param string $id
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \App\Exceptions\Article\ArticleNotFoundException
      */
-    public function update(Request $request, string $id)
+    public function update(ArticleRequest $request, string $id)
     {
-
-        $validator = Validator::make($request->all(), [
-            'checkboxCategories' => 'required|min:1|max:2',
-            'name' => 'required|max:50',
-            'color' => 'required|max:50',
-            'size' => 'required|max:50',
-            'price' => 'required',
-            'description' => 'required|max:455',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('articles/new')
-                ->withErrors($validator)
-                ->withInput()->with([
-                    'categories' => $categories,
-                ]);
-        }
-
-        $dataRequest = $request->all();
-        $tabCategories = $dataRequest['checkboxCategories'];
-
-        $data = [
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'size' => $request->input('size'),
-            'price' => $request->input('price'),
-            'description' => $request->input('description'),
-        ];
-
+        $dataValidated = $request->validated();
         //  Une condition pour remplacer si il y a une nouvelle image
         if ($request->file('image')) {
-            $file = $this->imageManager->imageStorage($request->file('image'));
-            $data = [
-                'name' => $request->input('name'),
-                'color' => $request->input('color'),
-                'size' => $request->input('size'),
-                'price' => $request->input('price'),
-                'description' => $request->input('description'),
-                'image' => $file,
-            ];
+            $file = $request->file('image');
         }
 
-        $res = $this->articleService->updateArticle($id, $data, $tabCategories);
+        $res = $this->articleService->updateArticle($id, $dataValidated, $file ?? null);
 
         if ($res != true){
             $fails = 'un problème est survenu ! ';

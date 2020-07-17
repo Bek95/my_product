@@ -29,7 +29,8 @@ class CategoryService
      */
     public function createCategory(array $data)
     {
-        return $this->categoryRepository->createCategory($data);
+        $name = $data['name'];
+        return $this->categoryRepository->createCategory($name);
     }
 
     /**
@@ -49,7 +50,8 @@ class CategoryService
      */
     public function updateCategory(string $id, array $data)
     {
-        return $this->categoryRepository->updateCategory($id, $data);
+        $name = $data['name'];
+        return $this->categoryRepository->updateCategory($id, $name);
     }
 
     /**

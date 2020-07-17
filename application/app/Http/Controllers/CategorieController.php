@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Http\Requests\CategoryRequest;
 use App\src\Domain\Category\Service\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -49,30 +49,19 @@ class CategorieController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @param CategoryRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      * @throws \App\Exceptions\Category\CategoryNotCreatedException
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $validateData = Validator::make($request->all(), [
-            'name' => 'required|string|max:60',
-        ]);
+        $validateData = $request->validated();
 
-        if ($validateData->fails()) {
-            return redirect('categories/new')
-                ->withErrors($validateData)
-                ->withInput();
-        }
-        $data = $request->all();
-
-        $res = $this->categoryService->createCategory($data);
+        $res = $this->categoryService->createCategory($validateData);
 
         if ($res === false) {
             $message = 'Cette catégorie existe';
             return view('categories.create', compact('message'));
-
         }
 
         return redirect()->route('categories.index')->with('success', 'Votre catégorie a été créé avec succès');
@@ -90,7 +79,10 @@ class CategorieController extends Controller
         Log::info('la catégorie a pour id : ' . $category);
         $articles = $category->articles;
 
-        return view('categories.show', compact('articles', 'category'));
+        return view('categories.show')->with([
+            'articles' => $articles,
+            'category' => $category,
+        ]);
     }
 
     /**
@@ -113,25 +105,16 @@ class CategorieController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param CategoryRequest $request
      * @param $id
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \App\Exceptions\Category\CategoryNotFoundException
      */
-    public function update(Request $request, $id)
+
+    public function update(CategoryRequest $request, $id)
     {
-        $validateData = Validator::make($request->all(), [
-            'name' => 'required|string|max:60',
-        ]);
-
-        if ($validateData->fails()) {
-            return redirect('categories/new')
-                ->withErrors($validateData)
-                ->withInput();
-        }
-
-        $data = $request->all();
-        $this->categoryService->updateCategory($id, $data);
+        $validateData = $request->validated();
+        $this->categoryService->updateCategory($id, $validateData);
 
         return redirect()->route('categories.index')->with('success', 'Votre modification a été effecuté avec succès !');
     }

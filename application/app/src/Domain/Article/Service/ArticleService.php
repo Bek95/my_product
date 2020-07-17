@@ -8,7 +8,6 @@ use App\Article;
 use App\src\Domain\Utilities\ImageManager;
 use App\src\Infrastructure\Article\Repository\ArticleRepository;
 use Illuminate\Http\UploadedFile;
-use phpDocumentor\Reflection\Types\Object_;
 
 class ArticleService
 {
@@ -24,8 +23,8 @@ class ArticleService
 
     /**
      * ArticleService constructor.
-     *
      * @param ArticleRepository $articleRepository
+     * @param ImageManager $imageManager
      */
     public function __construct(ArticleRepository $articleRepository, ImageManager $imageManager)
     {
@@ -76,13 +75,38 @@ class ArticleService
     /**
      * @param string $id
      * @param array $data
-     * @param array $tabCategories
+     * @param UploadedFile|null $image
      * @return bool
      * @throws \App\Exceptions\Article\ArticleNotFoundException
      */
-    public function updateArticle(string $id, array $data, array $tabCategories)
+    public function updateArticle(string $id, array $data, ? UploadedFile $image)
     {
-        return $this->articleRepository->updateArticle($id, $data, $tabCategories);
+       $tabCategories = $data['checkboxCategories'];
+
+       if (is_null($image)) {
+
+           $params = [
+               'name' => $data['name'],
+               'color' => $data['color'],
+               'size' => $data['size'],
+               'price' => $data['price'],
+               'description' => $data['description'],
+           ];
+       }else{
+           //ici si une image a été transmit lors de l'update, je l'affecte à l'article
+           $file = $this->imageManager->imageStorage($image);
+
+           $params = [
+               'name' => $data['name'],
+               'color' => $data['color'],
+               'size' => $data['size'],
+               'price' => $data['price'],
+               'description' => $data['description'],
+               'image' => $file,
+           ];
+       }
+
+        return $this->articleRepository->updateArticle($id, $params, $tabCategories);
     }
 
     /**

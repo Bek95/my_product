@@ -31,25 +31,18 @@
                         </ul>
                     </div>
             @endif
-                <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
+            <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
                     afin de gérer des fichiers-->
                 <form method="post" action="{{ route('articles.update', $article->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('put')
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="categories">Catégories : </label><br/>
-                            @foreach($article->categories as $articleCat)
-                                    <label for="{{ $articleCat->name }}">{{ $articleCat->name }}</label>
-                                    <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $articleCat->id }}]"
-                                           value="{{ $articleCat->name }}" {{ $articleCat->id ? 'checked' : '' }}>
-{{--                                @foreach(\App\Category::where('id', '!=', $articleCat->id )->get() as $category)--}}
-{{--                                    <label for="{{ $category->name }}">{{ $category->name }}</label>--}}
-{{--                                    <input type="checkbox" name="otherCategories[{{ $category->id }}]" value="{{ $category->name }}">--}}
-{{--                                @endforeach--}}
-{{--                                    <input type="checkbox" name="otherCategories" value="{{ \App\Category::where('id', '!=', $articleCat->id )->get() }}">--}}
-{{--                                {{ dd(\App\Category::where('id', '!=', $articleCat->id )->get()) }}--}}
-
+                            <h5>Categories :</h5>
+                            @foreach($categories as $category)
+                                <label for="{{ $category->name }}">{{ $category->name }}</label>
+                                <input type="checkbox" value="{{ $category->id }}" name="checkboxCategories[{{ $category->id }}]" @foreach($articleCats as $articleCat)
+                                    {{ $articleCat->id == $category->id ? 'checked' : '' }} @endforeach>
                             @endforeach
                         </div>
                     </div>

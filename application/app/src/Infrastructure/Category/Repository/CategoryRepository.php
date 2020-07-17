@@ -43,24 +43,24 @@ class CategoryRepository
     }
 
     /**
-     * @param array $data
+     * @param string $name
      * @return bool
      * @throws CategoryNotCreatedException
      */
-    public function createCategory(array $data): bool
+    public function createCategory(string $name): bool
     {
         try {
             $category = $this->category;
-            $value = $category::where('name', $data['name'])->first();
+            $value = $category::where('name', $name)->first();
             Log::info('CATEGORY NAME : ' . $value);
 
-            if (strtolower($data['name']) === strtolower($value['name'])){
+            if (strtolower($name) === strtolower($value['name'])){
                 $res = false;
-
             }else{
-                $category->name = $data['name'];
+                $category->name = $name;
                 $res = $category->save();
             }
+
             return $res;
         }catch (\Exception $exception){
             throw new CategoryNotCreatedException('CATEGORY NOT CREATED ');
@@ -78,15 +78,15 @@ class CategoryRepository
 
     /**
      * @param string $id
-     * @param array $data
+     * @param string $name
      * @return bool
      * @throws CategoryNotFoundException
      */
-    public function updateCategory(string $id, array $data): bool
+    public function updateCategory(string $id, string $name): bool
     {
         try {
             $category = $this->findCategorybyId($id);
-            $category->name = $data['name'];
+            $category->name = strtolower($name);
 
             return $category->save();
         }catch (\Exception $exception) {
