@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleRequest;
 use App\src\Domain\Article\Service\ArticleService;
 use App\src\Domain\Category\Service\CategoryService;
 use App\src\Domain\Utilities\ImageManager;
@@ -69,53 +70,23 @@ class ArticleController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @param ArticleRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \App\Exceptions\Article\ArticleNotCreatedException
      */
-    public function store(Request $request)
+    public function store(ArticleRequest $request)
     {
         $categories = $this->categoryService->categories();
-
-        $validator = Validator::make($request->all(), [
-            'checkboxCategories' => 'required|min:1|max:2',
-            'name' => 'required|max:50',
-            'color' => 'required|max:50',
-            'size' => 'required|max:50',
-            'price' => 'required',
-            'description' => 'required|max:455',
-            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect('articles/new')
-                ->withErrors($validator)
-                ->withInput()->with([
-                    'categories' => $categories,
-                ]);
-        }
-
-        $dataRequest = $request->all();
-        $tabCategories = $dataRequest['checkboxCategories'];
-
+        $dataValidated = $request->validated();
         $image = $request->file('image');
-        $file = $this->imageManager->imageStorage($image);
 
-        $data = [
-            'name' => $request->input('name'),
-            'color' => $request->input('color'),
-            'size' => $request->input('size'),
-            'price' => $request->input('price'),
-            'description' => $request->input('description'),
-            'image' => $file, // ici j'attribue le nom de l'image à mon article
-        ];
-
-        $res = $this->articleService->createArticle($data, $tabCategories);
+        $res = $this->articleService->createArticle($dataValidated, $image);
 
         if ($res != true){
             $fails = 'un problème est survenu ! ';
             return redirect()->back()->with([
                 'fails' => $fails,
+                'categories' => $categories,
             ]);
         }
 
