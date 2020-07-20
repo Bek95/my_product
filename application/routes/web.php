@@ -22,10 +22,10 @@ Route::put('articles/{id}/update', 'ArticleController@update')->name('articles.u
 Route::get('articles/{id}/destroy', 'ArticleController@destroy')->name('articles.destroy');
 
 //Categories Routes
-Route::get('categories/overview', 'CategorieController@index')->name('categories.index');
-Route::get('categories/new', 'CategorieController@create')->name('categories.create');
-Route::post('categories/store', 'CategorieController@store')->name('categories.store');
-Route::get('categories/{id}/edit', 'CategorieController@edit')->name('categories.edit');
-Route::put('categories/{id}/update', 'CategorieController@update')->name('categories.update');
-Route::get('categories/{id}/show', 'CategorieController@showArticleByCategory')->name('categories.show');
+Route::get('categories/overview', 'CategoryController@index')->name('categories.index');
+Route::get('categories/new', 'CategoryController@create')->name('categories.create');
+Route::post('categories/store', 'CategoryController@store')->name('categories.store');
+Route::get('categories/{id}/edit', 'CategoryController@edit')->name('categories.edit');
+Route::put('categories/{id}/update', 'CategoryController@update')->name('categories.update');
+Route::get('categories/{id}/show', 'CategoryController@showArticleByCategory')->name('categories.show');
 

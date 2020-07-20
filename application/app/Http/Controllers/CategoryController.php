@@ -6,7 +6,7 @@ use App\Http\Requests\CategoryRequest;
 use App\src\Domain\Category\Service\CategoryService;
 use Illuminate\Support\Facades\Log;
 
-class CategorieController extends Controller
+class CategoryController extends Controller
 {
     /**
      * @var CategoryService
