@@ -18,8 +18,6 @@ class ArticleController extends Controller
      */
     private $articleService;
 
-
-
     /**
      * ArticleController constructor.
      *

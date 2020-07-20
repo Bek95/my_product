@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
 use App\src\Domain\Category\Service\CategoryService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class CategorieController extends Controller
 {
@@ -49,9 +47,9 @@ class CategorieController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
      * @param CategoryRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-     * @throws \App\Exceptions\Category\CategoryNotCreatedException
      */
     public function store(CategoryRequest $request)
     {
