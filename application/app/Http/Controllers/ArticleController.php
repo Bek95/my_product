@@ -39,7 +39,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * * Display a listing of the resource.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -57,7 +57,7 @@ class ArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
@@ -70,7 +70,6 @@ class ArticleController extends Controller
     /**
      * @param ArticleRequest $request
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \App\Exceptions\Article\ArticleNotCreatedException
      */
     public function store(ArticleRequest $request)
     {
@@ -94,7 +93,7 @@ class ArticleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param $id
+     * @param string $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(string $id)
@@ -114,7 +113,6 @@ class ArticleController extends Controller
      * @param ArticleRequest $request
      * @param string $id
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \App\Exceptions\Article\ArticleNotFoundException
      */
     public function update(ArticleRequest $request, string $id)
     {
@@ -139,9 +137,8 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param $id
+     * @param string $id
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
      */
     public function destroy(string $id)
     {

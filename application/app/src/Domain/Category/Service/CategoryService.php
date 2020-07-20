@@ -4,20 +4,23 @@
 namespace App\src\Domain\Category\Service;
 
 
-use App\src\Infrastructure\Category\Repository\CategoryRepository;
+use App\Category;
+use App\src\Domain\Category\Repository\CategoryRepositoryInterface;
+use Illuminate\Support\Collection;
 
 class CategoryService
 {
     /**
-     * @var CategoryRepository
+     * @var CategoryRepositoryInterface
      */
     private $categoryRepository;
 
     /**
      * CategoryService constructor.
-     * @param CategoryRepository $categoryRepository
+     *
+     * @param CategoryRepositoryInterface $categoryRepository
      */
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
     }
@@ -25,19 +28,19 @@ class CategoryService
     /**
      * @param array $data
      * @return bool
-     * @throws \App\Exceptions\Category\CategoryNotCreatedException
      */
-    public function createCategory(array $data)
+    public function createCategory(array $data): bool
     {
         $name = $data['name'];
+
         return $this->categoryRepository->createCategory($name);
     }
 
     /**
      * @param string $id
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Category
      */
-    public function findCategoryById(string $id)
+    public function findCategoryById(string $id): Category
     {
         return $this->categoryRepository->findCategorybyId($id);
     }
@@ -46,18 +49,17 @@ class CategoryService
      * @param string $id
      * @param array $data
      * @return bool
-     * @throws \App\Exceptions\Category\CategoryNotFoundException
      */
-    public function updateCategory(string $id, array $data)
+    public function updateCategory(string $id, array $data): bool
     {
         $name = $data['name'];
         return $this->categoryRepository->updateCategory($id, $name);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
-    public function categories()
+    public function categories(): Collection
     {
         return $this->categoryRepository->categories();
     }

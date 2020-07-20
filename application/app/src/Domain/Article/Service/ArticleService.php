@@ -5,14 +5,14 @@ namespace App\src\Domain\Article\Service;
 
 
 use App\Article;
+use App\src\Domain\Article\Repository\ArticleRepositoryInterface;
 use App\src\Domain\Utilities\ImageManager;
-use App\src\Infrastructure\Article\Repository\ArticleRepository;
 use Illuminate\Http\UploadedFile;
 
 class ArticleService
 {
     /**
-     * @var ArticleRepository
+     * @var ArticleRepositoryInterface
      */
     private $articleRepository;
 
@@ -23,10 +23,10 @@ class ArticleService
 
     /**
      * ArticleService constructor.
-     * @param ArticleRepository $articleRepository
+     * @param ArticleRepositoryInterface $articleRepository
      * @param ImageManager $imageManager
      */
-    public function __construct(ArticleRepository $articleRepository, ImageManager $imageManager)
+    public function __construct(ArticleRepositoryInterface $articleRepository, ImageManager $imageManager)
     {
         $this->articleRepository = $articleRepository;
         $this->imageManager = $imageManager;
@@ -44,7 +44,6 @@ class ArticleService
      * @param array $data
      * @param UploadedFile $image
      * @return bool
-     * @throws \App\Exceptions\Article\ArticleNotCreatedException
      */
     public function createArticle(array $data, UploadedFile $image): bool
     {
@@ -77,9 +76,8 @@ class ArticleService
      * @param array $data
      * @param UploadedFile|null $image
      * @return bool
-     * @throws \App\Exceptions\Article\ArticleNotFoundException
      */
-    public function updateArticle(string $id, array $data, ? UploadedFile $image)
+    public function updateArticle(string $id, array $data, ? UploadedFile $image): bool
     {
        $tabCategories = $data['checkboxCategories'];
 
@@ -110,9 +108,8 @@ class ArticleService
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return bool
-     * @throws \Exception
      */
     public function destroyArticle(string $id): bool
     {

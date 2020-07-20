@@ -6,11 +6,12 @@ namespace App\src\Infrastructure\Article\Repository;
 use App\Article;
 use App\Exceptions\Article\ArticleNotCreatedException;
 use App\Exceptions\Article\ArticleNotFoundException;
+use App\src\Domain\Article\Repository\ArticleRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class ArticleRepository
+class ArticleRepository implements ArticleRepositoryInterface
 {
     /**
      * @var Article
