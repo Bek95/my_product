@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ArticleRequest;
 use App\src\Domain\Article\Service\ArticleService;
 use App\src\Domain\Category\Service\CategoryService;
-use App\src\Domain\Utilities\ImageManager;
 
 class ArticleController extends Controller
 {
@@ -19,23 +18,18 @@ class ArticleController extends Controller
      */
     private $articleService;
 
-    /**
-     * @var ImageManager
-     */
-    private $imageManager;
+
 
     /**
      * ArticleController constructor.
      *
      * @param CategoryService $categoryService
      * @param ArticleService $articleService
-     * @param ImageManager $imageManager
      */
-    public function __construct(CategoryService $categoryService, ArticleService $articleService, ImageManager $imageManager)
+    public function __construct(CategoryService $categoryService, ArticleService $articleService)
     {
         $this->categoryService = $categoryService;
         $this->articleService = $articleService;
-        $this->imageManager = $imageManager;
     }
 
     /**
