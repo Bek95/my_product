@@ -18,8 +18,8 @@ class CreateArticlesTable extends Migration
             $table->string('name')->index();
             $table->string('color');
             $table->string('size');
-            $table->string('description');
-            $table->float('price');
+            $table->longText('description');
+            $table->integer('price');
             $table->text('image');
             $table->softDeletes();
             $table->timestamps();

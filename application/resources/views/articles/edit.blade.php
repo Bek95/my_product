@@ -5,7 +5,8 @@
         <section class="jumbotron text-center">
             <div class="container">
                 <h1 class="jumbotron-heading">Modifier les caratéristiques d'une chemise</h1>
-                <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita, ubi nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum ac lasciviam.</p>
+                <p class="lead text-muted">Sed laeditur hic coetuum magnificus splendor levitate paucorum incondita, ubi
+                    nati sunt non reputantium, sed tamquam indulta licentia vitiis ad errores lapsorum ac lasciviam.</p>
                 <p>
                     <a href="{{ route('articles.index') }}" class="btn btn-primary my-2">Retour</a>
                     {{--                <a href="#" class="btn btn-secondary my-2">Secondary action</a>--}}
@@ -14,11 +15,37 @@
         </section>
         <div class="album py-5 bg-light">
             <div class="container">
-                <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
+                @if (isset($fails))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ $fails }}</li>
+                        </ul>
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+            @endif
+            <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
                     afin de gérer des fichiers-->
                 <form method="post" action="{{ route('articles.update', $article->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('put')
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <h5>Categories :</h5>
+                            @foreach($categories as $category)
+                                <label for="{{ $category->name }}">{{ $category->name }}</label>
+                                <input type="checkbox" value="{{ $category->id }}" name="checkboxCategories[{{ $category->id }}]" @foreach($articleCats as $articleCat)
+                                    {{ $articleCat->id == $category->id ? 'checked' : '' }} @endforeach>
+                            @endforeach
+                        </div>
+                    </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="name">Nom</label>
@@ -32,29 +59,11 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="size">Taille</label>
-                            <select id="size" class="form-control" name="size">
-                                <option selected>Choose...</option>
-                                <option>S</option>
-                                <option>L</option>
-                                <option>XL</option>
-                            </select>
+                            <input type="text" class="form-control" id="size" name="size" value="{{ $article->size }}">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="price">Prix</label>
                             <input type="number" class="form-control" id="price" name="price" value="{{ $article->price }}">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="category">Categories</label>
-                            <select id="category" class="form-control" name="category">
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6" style="padding-top: 37px">
-                            <a href="{{ route('categories.create') }}">Créer une nouvelle catégorie</a>
                         </div>
                     </div>
                     <div class="form-group">
@@ -64,13 +73,13 @@
                     <div class="col-lg-12 mt-5">
                         <label for="image">Image de la chemise</label>
                         <div class="row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <img src="/storage/articles/{{ $article->image }}" alt="photo image">
                             </div>
-                            <div class="col-lg-8">
-                                <span>Modifier l'image</span>
-                                <input type="file" class="form-control-file" id="image" name="image">
-                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <span>Modifier l'image</span>
+                            <input type="file" class="form-control-file" id="image" name="image">
                         </div>
                     </div>
                     <div class="row" style="margin: 20px">

@@ -14,70 +14,75 @@
         </section>
         <div class="album py-5 bg-light">
             <div class="container">
-            <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
-                afin de gérer des fichiers-->
-                <form method="post" action="{{ route('articles.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-row">
-                        <div class="form-group col-md-6" style="padding-top: 37px">
-                            <a href="{{ route('categories.create') }}">Créer une nouvelle catégorie</a>
-                        </div>
+                @if (isset($fails))
+                    <div class="alert alert-danger">
+                        <ul>
+                            <li>{{ $fails }}</li>
+                        </ul>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="category_first">Categories</label>
-                            <select id="category_first" class="form-control" name="category_first">
-                                <option selected value="choice_cat1">Choose...</option>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Ici je précise la route ou sera traité les informations ainsi que la protection csrf et le enctype
+                    afin de gérer des fichiers-->
+                @if(count($categories) > 0)
+                    <form method="post" action="{{ route('articles.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-row">
+
+                            <div class="form-group col-md-6">
+                                <label for="categories">Catégories (2 max) : </label><br/>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <label for="{{ $category->name }}">{{ $category->name }}</label>
+                                    <input class="custom-checkbox" type="checkbox" name="checkboxCategories[{{ $category->id }}]" value="{{ $category->name }}">
                                 @endforeach
-                            </select>
+                            </div>
+
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="category_second">Categories additionnelles</label>
-                            <select id="category_second" class="form-control" name="category_second">
-                                <option selected value="choice_cat2">Choose...</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="name">Nom</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="color">Couleur</label>
+                                <input type="text" class="form-control" id="color" name="color" value="{{ old('color') }}" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="name">Nom</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="size">Taille</label>
+                                <input type="text" class="form-control" id="size" name="size" value="{{ old('size') }}" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="price">Prix</label>
+                                <input type="number" class="form-control" id="price" name="price" value="{{ old('price') }}" required>
+                            </div>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="color">Couleur</label>
-                            <input type="text" class="form-control" id="color" name="color" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="size">Taille</label>
-                            <select id="size" class="form-control" name="size" required>
-                                <option selected>Choose...</option>
-                                <option>S</option>
-                                <option>L</option>
-                                <option>XL</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="price">Prix</label>
-                            <input type="number" class="form-control" id="price" name="price" required>
-                        </div>
-                    </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description') }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="image">Choisir un fichier</label>
                             <input type="file" class="form-control-file" id="image" name="image" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Enregistré</button>
-                </form>
+                    </form>
+                @else
+                    <div class="form-row">
+                        <div class="form-group col-md-6" style="padding-top: 37px">
+                            <a href="{{ route('categories.create') }}">Aucunes catégories n'existe, veuillez en créer une avant de créer un article</a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </main>
